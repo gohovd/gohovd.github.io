@@ -486,14 +486,14 @@
     ArrowDown:  { x: 0, y:  1 },
     ArrowLeft:  { x: -1, y: 0 },
     ArrowRight: { x: 1,  y: 0 },
-    w: { x: 0, y: -1 }, W: { x: 0, y: -1 },
-    s: { x: 0, y:  1 }, S: { x: 0, y:  1 },
-    a: { x: -1, y: 0 }, A: { x: -1, y: 0 },
-    d: { x: 1,  y: 0 }, D: { x: 1,  y: 0 },
-    k: { x: 0, y: -1 }, K: { x: 0, y: -1 },
-    j: { x: 0, y:  1 }, J: { x: 0, y:  1 },
-    h: { x: -1, y: 0 }, H: { x: -1, y: 0 },
-    l: { x: 1,  y: 0 }, L: { x: 1,  y: 0 },
+    w: { x: 0, y: -1 }, W: { x: 0, y: -1 }, KeyW: { x: 0, y: -1 },
+    s: { x: 0, y:  1 }, S: { x: 0, y:  1 }, KeyS: { x: 0, y:  1 },
+    a: { x: -1, y: 0 }, A: { x: -1, y: 0 }, KeyA: { x: -1, y: 0 },
+    d: { x: 1,  y: 0 }, D: { x: 1,  y: 0 }, KeyD: { x: 1,  y: 0 },
+    k: { x: 0, y: -1 }, K: { x: 0, y: -1 }, KeyK: { x: 0, y: -1 },
+    j: { x: 0, y:  1 }, J: { x: 0, y:  1 }, KeyJ: { x: 0, y:  1 },
+    h: { x: -1, y: 0 }, H: { x: -1, y: 0 }, KeyH: { x: -1, y: 0 },
+    l: { x: 1,  y: 0 }, L: { x: 1,  y: 0 }, KeyL: { x: 1,  y: 0 },
   };
 
   function initSnake() {
@@ -504,7 +504,7 @@
     const CELL = 16;
     const COLS = canvas.width / CELL;
     const ROWS = canvas.height / CELL;
-    const TICK_MS = 110;
+    const TICK_MS = 95; // snappy, responsive speed
 
     const initSnakeBody = () => [
       { x: Math.floor(COLS / 2), y: Math.floor(ROWS / 2) },
@@ -514,8 +514,8 @@
 
     snakeState = {
       snake: initSnakeBody(),
-      dir: { x: 0, y: 0 },
-      nextDir: { x: 0, y: 0 },
+      dir: { x: 1, y: 0 }, // horizontally facing right initially
+      inputQueue: [],      // input buffer for instant, queued turns (e.g. AW, WD)
       food: null,
       score: 0,
       lastTick: 0,
@@ -623,7 +623,11 @@
       const s = snakeState;
       if (!s || s.gameOver || !s.started) return;
 
-      s.dir = { x: s.nextDir.x, y: s.nextDir.y };
+      // Consume next queued direction turn if available
+      if (s.inputQueue.length > 0) {
+        s.dir = s.inputQueue.shift();
+      }
+
       const head = { x: s.snake[0].x + s.dir.x, y: s.snake[0].y + s.dir.y };
 
       // Wall collision
@@ -654,6 +658,7 @@
     function handleSnakeGameOver() {
       const s = snakeState;
       s.gameOver = true;
+      s.inputQueue = [];
 
       // Update best score
       const bestEl = $("#snake-best");
@@ -697,11 +702,11 @@
 
       // Restart on game over
       if (s.gameOver) {
-        if (key === " " || key === "Spacebar") {
+        if (key === " " || key === "Spacebar" || e.code === "Space") {
           e.preventDefault();
           s.snake = initSnakeBody();
-          s.dir = { x: 0, y: 0 };
-          s.nextDir = { x: 0, y: 0 };
+          s.dir = { x: 1, y: 0 };
+          s.inputQueue = [];
           s.score = 0;
           s.gameOver = false;
           s.started = false;
@@ -711,23 +716,41 @@
           const nameEntry = $("#snake-name-entry");
           if (nameEntry) nameEntry.hidden = true;
           placeFood();
+          draw();
         }
         return;
       }
 
-      // Direction lookup
-      const mapped = KEY_MAP[key];
+      // Look up direction by key or code
+      const mapped = KEY_MAP[key] || KEY_MAP[e.code];
       if (!mapped) return;
-
-      // Prevent 180° reversal
-      if (mapped.x !== 0 && mapped.x === -s.dir.x) return;
-      if (mapped.y !== 0 && mapped.y === -s.dir.y) return;
-
       e.preventDefault();
-      s.nextDir = mapped;
+
+      // If not started, first directional key initiates game immediately
       if (!s.started) {
+        // Prevent going directly backwards into initial body
+        if (mapped.x === -1 && mapped.y === 0) return;
         s.started = true;
+        s.dir = mapped;
+        s.inputQueue = [];
         s.lastTick = performance.now();
+        tick();
+        draw();
+        return;
+      }
+
+      // Reference direction is the last queued direction, or current moving direction
+      const lastDir = s.inputQueue.length > 0 ? s.inputQueue[s.inputQueue.length - 1] : s.dir;
+
+      // Ignore duplicate key press
+      if (mapped.x === lastDir.x && mapped.y === lastDir.y) return;
+
+      // Prevent 180° reverse turn against the pending movement
+      if (mapped.x === -lastDir.x && mapped.y === -lastDir.y) return;
+
+      // Buffer up to 2 turns for ultra-responsive double-turns (e.g. AW, WD, SA)
+      if (s.inputQueue.length < 2) {
+        s.inputQueue.push(mapped);
       }
     };
 
