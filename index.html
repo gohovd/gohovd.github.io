@@ -5,29 +5,105 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gøran Strønstad</title>
   <meta name="description" content="Resume & Portfolio — Gøran Strønstad, Software Engineer." />
-
-  <!-- Open Graph -->
   <meta property="og:title" content="Gøran Strønstad" />
   <meta property="og:description" content="Software Engineer — Norway" />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://gohost.no" />
-
-  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%23268bd2'/><text x='50' y='65' font-size='50' font-weight='bold' fill='white' text-anchor='middle' font-family='system-ui'>GS</text></svg>" />
-
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Navigation -->
+
+  <!-- ======== GAME OVERLAY ======== -->
+  <div id="game-overlay">
+    <!-- Slot Machine -->
+    <div id="slot-game" class="game-box">
+      <div class="game-title">🎰</div>
+      <div class="slot-credits">Credits: <span id="slot-credits">10</span></div>
+      <div class="slot-machine" id="slot-machine-reels" title="Click reels or press Space to spin!">
+        <div class="slot-window">
+          <div class="slot-reel" id="reel-0">🍒</div>
+        </div>
+        <div class="slot-window">
+          <div class="slot-reel" id="reel-1">🍋</div>
+        </div>
+        <div class="slot-window">
+          <div class="slot-reel" id="reel-2">🔔</div>
+        </div>
+      </div>
+      <div class="slot-result" id="slot-result">&nbsp;</div>
+      <button class="slot-spin-btn" id="slot-spin-btn" type="button">SPIN (<kbd>Space</kbd>)</button>
+
+      <!-- Slot Name Entry for High Score -->
+      <div class="name-entry" id="slot-name-entry" hidden>
+        <div class="name-entry-title">🏆 Top Score! Enter your name:</div>
+        <form class="name-entry-form" id="slot-name-form">
+          <input type="text" maxlength="12" placeholder="Your name" class="name-input" id="slot-name-input" required autocomplete="off" />
+          <button type="submit" class="name-submit-btn">Save</button>
+        </form>
+      </div>
+
+      <!-- Slot Leaderboard -->
+      <div class="leaderboard-section">
+        <div class="leaderboard-header">
+          <span class="lb-title">🏆 Hall of Fame</span>
+          <button class="lb-toggle-btn" id="slot-lb-toggle" type="button">Leaderboard</button>
+        </div>
+        <div class="leaderboard-wrap" id="slot-lb-wrap">
+          <ol class="leaderboard-list" id="slot-lb-list"></ol>
+        </div>
+      </div>
+    </div>
+
+    <!-- Snake -->
+    <div id="snake-game" class="game-box">
+      <div class="snake-wrapper">
+        <div class="snake-score-row">
+          <span class="snake-score">Score: <span id="snake-score">0</span></span>
+          <span class="snake-best">Best: <span id="snake-best">0</span></span>
+        </div>
+        <canvas id="snake-canvas" width="240" height="240"></canvas>
+      </div>
+      <div class="game-prompt">Arrows · WASD · HJKL · <kbd>Space</kbd> Restart</div>
+
+      <!-- Snake Name Entry for High Score -->
+      <div class="name-entry" id="snake-name-entry" hidden>
+        <div class="name-entry-title">🏆 Top Score! Enter your name:</div>
+        <form class="name-entry-form" id="snake-name-form">
+          <input type="text" maxlength="12" placeholder="Your name" class="name-input" id="snake-name-input" required autocomplete="off" />
+          <button type="submit" class="name-submit-btn">Save</button>
+        </form>
+      </div>
+
+      <!-- Snake Leaderboard -->
+      <div class="leaderboard-section">
+        <div class="leaderboard-header">
+          <span class="lb-title">🏆 Hall of Fame</span>
+          <button class="lb-toggle-btn" id="snake-lb-toggle" type="button">Leaderboard</button>
+        </div>
+        <div class="leaderboard-wrap" id="snake-lb-wrap">
+          <ol class="leaderboard-list" id="snake-lb-list"></ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="overlay-hint" id="overlay-hint" title="Click or move mouse to continue to resume">Move mouse to continue to resume →</div>
+  </div>
+
+  <!-- ======== NAVIGATION ======== -->
   <nav class="nav no-print" id="nav">
-    <a href="#hero" class="nav-logo">GS</a>
-    <div class="nav-links">
+    <a href="#" class="nav-logo" id="nav-logo">GS</a>
+    <div class="nav-links" id="nav-links-scroll">
       <a href="#about">About</a>
       <a href="#experience">Experience</a>
       <a href="#skills">Skills</a>
       <a href="#projects">Projects</a>
     </div>
     <div class="nav-actions">
+      <button id="view-toggle" class="btn-pill" title="Switch view">
+        <svg class="icon-expand" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"></polyline><polyline points="9 21 3 21 3 15"></polyline><line x1="21" y1="3" x2="14" y2="10"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+        <svg class="icon-compact" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 14 10 14 10 20"></polyline><polyline points="20 10 14 10 14 4"></polyline><line x1="14" y1="10" x2="21" y2="3"></line><line x1="3" y1="21" x2="10" y2="14"></line></svg>
+      </button>
       <button id="theme-toggle" class="btn-icon" aria-label="Toggle theme" title="Toggle theme">
         <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
         <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -35,194 +111,188 @@
     </div>
   </nav>
 
-  <!-- Hero -->
-  <section class="hero" id="hero">
-    <div class="hero-content">
-      <div class="avatar" aria-label="Profile photo">
-        <svg viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="60" cy="60" r="60" fill="var(--avatar-bg)"/>
-          <circle cx="60" cy="45" r="20" fill="var(--avatar-fg)"/>
-          <ellipse cx="60" cy="95" rx="32" ry="22" fill="var(--avatar-fg)"/>
-        </svg>
-      </div>
-      <h1 class="hero-name">Gøran Strønstad</h1>
-      <p class="hero-role">Software Engineer</p>
-      <div class="hero-links">
-        <a href="mailto:goran.stronstad@marlink.com" title="Email">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-        </a>
-        <a href="https://github.com/gohovd" target="_blank" rel="noopener noreferrer" title="GitHub">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
-        </a>
-        <a href="https://gohost.no" title="Website">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-        </a>
-        <span class="hero-location">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-          Norway
-        </span>
-      </div>
-    </div>
-    <div class="scroll-hint no-print" aria-hidden="true">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg>
-    </div>
-  </section>
+  <!-- ============================================================
+       SINGLE-PAGE VIEW (compact, one viewport, no scroll)
+       ============================================================ -->
+  <div id="view-single" class="view">
+    <div class="sp">
+      <!-- Header row -->
+      <header class="sp-header">
+        <div class="sp-identity">
+          <div class="sp-avatar" aria-label="Profile photo">
+            <svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="60" fill="var(--avatar-bg)"/><circle cx="60" cy="45" r="20" fill="var(--avatar-fg)"/><ellipse cx="60" cy="95" rx="32" ry="22" fill="var(--avatar-fg)"/></svg>
+          </div>
+          <div>
+            <h1 class="sp-name">Gøran Strønstad</h1>
+            <p class="sp-role">Software Engineer</p>
+          </div>
+        </div>
+        <div class="sp-links">
+          <a href="mailto:goran.stronstad@marlink.com" title="Email"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+          <a href="https://github.com/gohovd" target="_blank" rel="noopener noreferrer" title="GitHub"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          <a href="https://gohost.no" title="Website"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></a>
+          <span class="sp-loc"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Norway</span>
+        </div>
+      </header>
 
-  <!-- About -->
-  <section class="section" id="about">
-    <div class="section-inner">
-      <h2 class="section-heading">About</h2>
-      <p class="about-text">
-        Technologist based in Norway. I build reliable backend systems, automate infrastructure, and craft modern web applications. I enjoy solving complex problems with clean, maintainable code.
-      </p>
-    </div>
-  </section>
-
-  <!-- Experience Timeline -->
-  <section class="section" id="experience">
-    <div class="section-inner">
-      <h2 class="section-heading">Experience</h2>
-      <div class="timeline">
-        <div class="tl-track" aria-hidden="true"></div>
-
-        <article class="tl-entry">
-          <div class="tl-dot tl-dot--active"></div>
-          <div class="tl-date">Present</div>
-          <div class="tl-card">
-            <h3>Software Engineer</h3>
-            <span class="tl-org">Marlink</span>
-            <p>Mission-critical maritime communication systems. Distributed services, infrastructure automation, global network reliability.</p>
-            <div class="tl-tags">
-              <span>Systems</span><span>Backend</span><span>Automation</span><span>Networking</span>
+      <!-- 3-column body -->
+      <div class="sp-body">
+        <!-- Experience -->
+        <div class="sp-col">
+          <h2 class="sp-heading">Experience</h2>
+          <div class="sp-timeline">
+            <div class="sp-tl-item sp-tl-active">
+              <div class="sp-tl-dot"></div>
+              <div class="sp-tl-content">
+                <span class="sp-tl-date">Present</span>
+                <strong>Software Engineer</strong>
+                <span class="sp-tl-org">Marlink</span>
+                <p>Maritime communication systems, distributed services, infrastructure automation.</p>
+              </div>
             </div>
-          </div>
-        </article>
-
-        <article class="tl-entry">
-          <div class="tl-dot"></div>
-          <div class="tl-date">Earlier</div>
-          <div class="tl-card">
-            <h3>Developer & Consultant</h3>
-            <span class="tl-org">Various</span>
-            <p>Web platforms, API integrations, database architecture. Cross-functional collaboration on scalable digital tools.</p>
-            <div class="tl-tags">
-              <span>Web</span><span>APIs</span><span>DevOps</span>
+            <div class="sp-tl-item">
+              <div class="sp-tl-dot"></div>
+              <div class="sp-tl-content">
+                <span class="sp-tl-date">Earlier</span>
+                <strong>Developer & Consultant</strong>
+                <span class="sp-tl-org">Various</span>
+                <p>Web platforms, API integrations, database architecture.</p>
+              </div>
             </div>
-          </div>
-        </article>
-
-        <article class="tl-entry">
-          <div class="tl-dot"></div>
-          <div class="tl-date">Education</div>
-          <div class="tl-card">
-            <h3>Information Technology</h3>
-            <span class="tl-org">University — Norway</span>
-            <p>Software engineering, algorithms, networking, databases, computer systems.</p>
-          </div>
-        </article>
-      </div>
-    </div>
-  </section>
-
-  <!-- Skills -->
-  <section class="section" id="skills">
-    <div class="section-inner">
-      <h2 class="section-heading">Skills</h2>
-      <div class="skills-visual">
-
-        <div class="skill-group">
-          <h4>Languages</h4>
-          <div class="skill-bars">
-            <div class="skill-row"><span class="skill-label">Python</span><div class="skill-bar"><div class="skill-fill" style="--pct:90%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">JavaScript / TS</span><div class="skill-bar"><div class="skill-fill" style="--pct:80%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">PHP</span><div class="skill-bar"><div class="skill-fill" style="--pct:70%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">Bash / Shell</span><div class="skill-bar"><div class="skill-fill" style="--pct:85%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">SQL</span><div class="skill-bar"><div class="skill-fill" style="--pct:75%"></div></div></div>
+            <div class="sp-tl-item">
+              <div class="sp-tl-dot"></div>
+              <div class="sp-tl-content">
+                <span class="sp-tl-date">Education</span>
+                <strong>Information Technology</strong>
+                <span class="sp-tl-org">University — Norway</span>
+              </div>
+            </div>
           </div>
         </div>
 
-        <div class="skill-group">
-          <h4>Infrastructure</h4>
-          <div class="skill-bars">
-            <div class="skill-row"><span class="skill-label">Linux</span><div class="skill-bar"><div class="skill-fill" style="--pct:92%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">Docker</span><div class="skill-bar"><div class="skill-fill" style="--pct:82%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">CI/CD</span><div class="skill-bar"><div class="skill-fill" style="--pct:78%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">Git</span><div class="skill-bar"><div class="skill-fill" style="--pct:88%"></div></div></div>
-            <div class="skill-row"><span class="skill-label">Networking</span><div class="skill-bar"><div class="skill-fill" style="--pct:80%"></div></div></div>
+        <!-- Skills -->
+        <div class="sp-col">
+          <h2 class="sp-heading">Skills</h2>
+          <div class="sp-skills">
+            <div class="sp-skill-row"><span>Python</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:90%"></div></div></div>
+            <div class="sp-skill-row"><span>JavaScript / TS</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:80%"></div></div></div>
+            <div class="sp-skill-row"><span>Bash / Shell</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:85%"></div></div></div>
+            <div class="sp-skill-row"><span>Linux</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:92%"></div></div></div>
+            <div class="sp-skill-row"><span>Docker</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:82%"></div></div></div>
+            <div class="sp-skill-row"><span>Git / CI/CD</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:88%"></div></div></div>
+            <div class="sp-skill-row"><span>SQL</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:75%"></div></div></div>
+            <div class="sp-skill-row"><span>Networking</span><div class="sp-bar"><div class="sp-bar-fill" style="--pct:80%"></div></div></div>
           </div>
         </div>
 
-        <div class="skill-group">
-          <h4>Architecture</h4>
-          <div class="skill-rings">
-            <div class="ring-item">
-              <svg class="ring" viewBox="0 0 80 80">
-                <circle class="ring-bg" cx="40" cy="40" r="34"/>
-                <circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:85"/>
-              </svg>
-              <span>REST APIs</span>
+        <!-- Projects + Architecture rings -->
+        <div class="sp-col">
+          <h2 class="sp-heading">Architecture</h2>
+          <div class="sp-rings">
+            <div class="sp-ring-item">
+              <svg class="sp-ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:85"/></svg>
+              <span>APIs</span>
             </div>
-            <div class="ring-item">
-              <svg class="ring" viewBox="0 0 80 80">
-                <circle class="ring-bg" cx="40" cy="40" r="34"/>
-                <circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:80"/>
-              </svg>
+            <div class="sp-ring-item">
+              <svg class="sp-ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:80"/></svg>
               <span>Databases</span>
             </div>
-            <div class="ring-item">
-              <svg class="ring" viewBox="0 0 80 80">
-                <circle class="ring-bg" cx="40" cy="40" r="34"/>
-                <circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:75"/>
-              </svg>
+            <div class="sp-ring-item">
+              <svg class="sp-ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:75"/></svg>
               <span>Security</span>
             </div>
-            <div class="ring-item">
-              <svg class="ring" viewBox="0 0 80 80">
-                <circle class="ring-bg" cx="40" cy="40" r="34"/>
-                <circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:82"/>
-              </svg>
+            <div class="sp-ring-item">
+              <svg class="sp-ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:82"/></svg>
               <span>Web</span>
             </div>
           </div>
+          <h2 class="sp-heading" style="margin-top:1.25rem">Projects</h2>
+          <div class="sp-projects">
+            <a href="https://github.com/gohovd/InternshipAdvisor" target="_blank" rel="noopener noreferrer" class="sp-proj">
+              <strong>InternshipAdvisor</strong>
+              <span>Internship placement platform →</span>
+            </a>
+            <a href="https://gohost.no" class="sp-proj">
+              <strong>gohost.no</strong>
+              <span>This site — GitHub Pages →</span>
+            </a>
+          </div>
         </div>
-
       </div>
+
+      <footer class="sp-footer no-print">
+        © <span class="year"></span> Gøran Strønstad · <a href="https://gohost.no">gohost.no</a>
+      </footer>
     </div>
-  </section>
+  </div>
 
-  <!-- Projects -->
-  <section class="section" id="projects">
-    <div class="section-inner">
-      <h2 class="section-heading">Projects</h2>
-      <div class="project-grid">
-
-        <a href="https://github.com/gohovd/InternshipAdvisor" target="_blank" rel="noopener noreferrer" class="proj-card">
-          <div class="proj-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-          </div>
-          <h4>InternshipAdvisor</h4>
-          <p>Internship placement & mentorship platform</p>
-          <span class="proj-link-hint">View on GitHub →</span>
-        </a>
-
-        <a href="https://gohost.no" class="proj-card">
-          <div class="proj-icon">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-          </div>
-          <h4>gohost.no</h4>
-          <p>This site — zero-cost GitHub Pages with custom domain</p>
-          <span class="proj-link-hint">Visit →</span>
-        </a>
-
+  <!-- ============================================================
+       SCROLL VIEW (immersive, multi-section)
+       ============================================================ -->
+  <div id="view-scroll" class="view" hidden>
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <div class="hero-content">
+        <div class="avatar" aria-label="Profile photo">
+          <svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="60" fill="var(--avatar-bg)"/><circle cx="60" cy="45" r="20" fill="var(--avatar-fg)"/><ellipse cx="60" cy="95" rx="32" ry="22" fill="var(--avatar-fg)"/></svg>
+        </div>
+        <h1 class="hero-name">Gøran Strønstad</h1>
+        <p class="hero-role">Software Engineer</p>
+        <div class="hero-links">
+          <a href="mailto:goran.stronstad@marlink.com" title="Email"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg></a>
+          <a href="https://github.com/gohovd" target="_blank" rel="noopener noreferrer" title="GitHub"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+          <a href="https://gohost.no" title="Website"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></a>
+          <span class="hero-location"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg> Norway</span>
+        </div>
       </div>
-    </div>
-  </section>
+      <div class="scroll-hint no-print" aria-hidden="true"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="7 13 12 18 17 13"></polyline><polyline points="7 6 12 11 17 6"></polyline></svg></div>
+    </section>
 
-  <!-- Footer -->
-  <footer class="footer no-print">
-    <p>© <span id="year"></span> Gøran Strønstad · <a href="https://gohost.no">gohost.no</a></p>
-  </footer>
+    <section class="section" id="about">
+      <div class="section-inner">
+        <h2 class="section-heading">About</h2>
+        <p class="about-text">Technologist based in Norway. I build reliable backend systems, automate infrastructure, and craft modern web applications. I enjoy solving complex problems with clean, maintainable code.</p>
+      </div>
+    </section>
 
-  <script src="script.js"></script>
+    <section class="section" id="experience">
+      <div class="section-inner">
+        <h2 class="section-heading">Experience</h2>
+        <div class="timeline">
+          <div class="tl-track" aria-hidden="true"></div>
+          <article class="tl-entry"><div class="tl-dot tl-dot--active"></div><div class="tl-date">Present</div><div class="tl-card"><h3>Software Engineer</h3><span class="tl-org">Marlink</span><p>Mission-critical maritime communication systems. Distributed services, infrastructure automation, global network reliability.</p><div class="tl-tags"><span>Systems</span><span>Backend</span><span>Automation</span><span>Networking</span></div></div></article>
+          <article class="tl-entry"><div class="tl-dot"></div><div class="tl-date">Earlier</div><div class="tl-card"><h3>Developer & Consultant</h3><span class="tl-org">Various</span><p>Web platforms, API integrations, database architecture. Cross-functional collaboration on scalable digital tools.</p><div class="tl-tags"><span>Web</span><span>APIs</span><span>DevOps</span></div></div></article>
+          <article class="tl-entry"><div class="tl-dot"></div><div class="tl-date">Education</div><div class="tl-card"><h3>Information Technology</h3><span class="tl-org">University — Norway</span><p>Software engineering, algorithms, networking, databases, computer systems.</p></div></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="skills">
+      <div class="section-inner">
+        <h2 class="section-heading">Skills</h2>
+        <div class="skills-visual">
+          <div class="skill-group"><h4>Languages</h4><div class="skill-bars"><div class="skill-row"><span class="skill-label">Python</span><div class="skill-bar"><div class="skill-fill" style="--pct:90%"></div></div></div><div class="skill-row"><span class="skill-label">JavaScript / TS</span><div class="skill-bar"><div class="skill-fill" style="--pct:80%"></div></div></div><div class="skill-row"><span class="skill-label">PHP</span><div class="skill-bar"><div class="skill-fill" style="--pct:70%"></div></div></div><div class="skill-row"><span class="skill-label">Bash / Shell</span><div class="skill-bar"><div class="skill-fill" style="--pct:85%"></div></div></div><div class="skill-row"><span class="skill-label">SQL</span><div class="skill-bar"><div class="skill-fill" style="--pct:75%"></div></div></div></div></div>
+          <div class="skill-group"><h4>Infrastructure</h4><div class="skill-bars"><div class="skill-row"><span class="skill-label">Linux</span><div class="skill-bar"><div class="skill-fill" style="--pct:92%"></div></div></div><div class="skill-row"><span class="skill-label">Docker</span><div class="skill-bar"><div class="skill-fill" style="--pct:82%"></div></div></div><div class="skill-row"><span class="skill-label">CI/CD</span><div class="skill-bar"><div class="skill-fill" style="--pct:78%"></div></div></div><div class="skill-row"><span class="skill-label">Git</span><div class="skill-bar"><div class="skill-fill" style="--pct:88%"></div></div></div><div class="skill-row"><span class="skill-label">Networking</span><div class="skill-bar"><div class="skill-fill" style="--pct:80%"></div></div></div></div></div>
+          <div class="skill-group"><h4>Architecture</h4><div class="skill-rings"><div class="ring-item"><svg class="ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:85"/></svg><span>REST APIs</span></div><div class="ring-item"><svg class="ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:80"/></svg><span>Databases</span></div><div class="ring-item"><svg class="ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:75"/></svg><span>Security</span></div><div class="ring-item"><svg class="ring" viewBox="0 0 80 80"><circle class="ring-bg" cx="40" cy="40" r="34"/><circle class="ring-fill" cx="40" cy="40" r="34" style="--pct:82"/></svg><span>Web</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="projects">
+      <div class="section-inner">
+        <h2 class="section-heading">Projects</h2>
+        <div class="project-grid">
+          <a href="https://github.com/gohovd/InternshipAdvisor" target="_blank" rel="noopener noreferrer" class="proj-card"><div class="proj-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg></div><h4>InternshipAdvisor</h4><p>Internship placement & mentorship platform</p><span class="proj-link-hint">View on GitHub →</span></a>
+          <a href="https://gohost.no" class="proj-card"><div class="proj-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg></div><h4>gohost.no</h4><p>This site — zero-cost GitHub Pages with custom domain</p><span class="proj-link-hint">Visit →</span></a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer no-print">
+      <p>© <span class="year"></span> Gøran Strønstad · <a href="https://gohost.no">gohost.no</a></p>
+    </footer>
+  </div>
+
+  <script src="script.js?v=3"></script>
 </body>
 </html>
